@@ -2,7 +2,7 @@
 
 LeaseEase is a conversational web app that helps drivers explore, compare, and understand car lease options. It supports natural voice input and produces lifelike voice responses using ElevenLabs. The assistant can search inventory, estimate monthly payments, and answer follow-up questions — making leasing simpler and more accessible.
 
-Built for HackUTD 2025. Submitted to:
+Built for HackUTD 2025 (but this is my own version). Submitted to:
 - ElevenLabs Challenge — immersive, high‑quality speech experiences
 - Toyota Challenge — mobility and automotive user experience
 
