@@ -5,9 +5,12 @@ import ChatInput from './components/ChatInput';
 import QuestionCard from './components/QuestionCard';
 import CarsGrid from './components/CarsGrid';
 import FinanceCalculator from './components/FinanceCalculator';
+import CompareModal from './components/CompareModal';
+import DealershipLocator from './components/DealershipLocator';
 import { useChatbot } from './hooks/useChatbot';
 import { startListening } from './speech';
 import { MessageCircle, Calculator } from 'lucide-react';
+import { Car } from './lib/supabase';
 
 function App() {
   const {
@@ -20,6 +23,9 @@ function App() {
 
   const [isListening, setIsListening] = useState(false);
   const [activeTab, setActiveTab] = useState<'chat' | 'finance'>('chat');
+  const [selectedForCompare, setSelectedForCompare] = useState<string[]>([]);
+  const [showCompareModal, setShowCompareModal] = useState(false);
+  const [selectedCarForDealership, setSelectedCarForDealership] = useState<Car | null>(null);
 
   const suggestedQuestions = [
     "I'm looking for something under $400 per month",
@@ -40,6 +46,31 @@ function App() {
       setIsListening(false);
     }, 5000);
   };
+
+  const handleCompareClick = (carId: string) => {
+    setSelectedForCompare((prev) => {
+      if (prev.includes(carId)) {
+        return prev.filter((id) => id !== carId);
+      }
+      if (prev.length < 2) {
+        const newSelection = [...prev, carId];
+        if (newSelection.length === 2) {
+          setShowCompareModal(true);
+        }
+        return newSelection;
+      }
+      return prev;
+    });
+  };
+
+  const handleCloseCompare = () => {
+    setShowCompareModal(false);
+    setSelectedForCompare([]);
+  };
+
+  const compareModalCars = selectedForCompare.length === 2
+    ? recommendedCars.filter((car) => selectedForCompare.includes(car.id))
+    : [];
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -111,6 +142,9 @@ function App() {
                     <CarsGrid
                       cars={recommendedCars}
                       onRemove={removeCarFromResults}
+                      onCompare={handleCompareClick}
+                      selectedForCompare={selectedForCompare}
+                      onFindDealership={(car) => setSelectedCarForDealership(car)}
                     />
                   </div>
                 </div>
@@ -136,6 +170,20 @@ function App() {
         <div className="flex-1 overflow-y-auto">
           <FinanceCalculator />
         </div>
+      )}
+
+      {showCompareModal && compareModalCars.length === 2 && (
+        <CompareModal
+          cars={compareModalCars as [Car, Car]}
+          onClose={handleCloseCompare}
+        />
+      )}
+
+      {selectedCarForDealership && (
+        <DealershipLocator
+          car={selectedCarForDealership}
+          onClose={() => setSelectedCarForDealership(null)}
+        />
       )}
     </div>
   );

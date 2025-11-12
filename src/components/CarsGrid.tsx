@@ -1,12 +1,15 @@
 import { Car } from '../lib/supabase';
-import { DollarSign, Fuel, Gauge, Settings } from 'lucide-react';
+import { DollarSign, Fuel, Gauge, Settings, GitCompare, MapPin } from 'lucide-react';
 
 interface CarsGridProps {
   cars: Car[];
   onRemove?: (carId: string) => void;
+  onCompare?: (carId: string) => void;
+  selectedForCompare?: string[];
+  onFindDealership?: (car: Car) => void;
 }
 
-export default function CarsGrid({ cars, onRemove }: CarsGridProps) {
+export default function CarsGrid({ cars, onRemove, onCompare, selectedForCompare = [], onFindDealership }: CarsGridProps) {
   if (cars.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
@@ -15,12 +18,16 @@ export default function CarsGrid({ cars, onRemove }: CarsGridProps) {
     );
   }
 
+  const isSelected = (carId: string) => selectedForCompare.includes(carId);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
       {cars.map((car) => (
         <div
           key={car.id}
-          className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
+          className={`bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group ${
+            isSelected(car.id) ? 'ring-4 ring-red-500' : ''
+          }`}
         >
           <div className="relative h-48 overflow-hidden bg-gray-100">
             <img
@@ -95,14 +102,38 @@ export default function CarsGrid({ cars, onRemove }: CarsGridProps) {
               </div>
             </div>
 
-            {onRemove && (
-              <button
-                onClick={() => onRemove(car.id)}
-                className="w-full py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-              >
-                Remove this option
-              </button>
-            )}
+            <div className="space-y-2">
+              {onFindDealership && (
+                <button
+                  onClick={() => onFindDealership(car)}
+                  className="w-full py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  <MapPin className="w-4 h-4" />
+                  Find Dealership
+                </button>
+              )}
+              {onCompare && (
+                <button
+                  onClick={() => onCompare(car.id)}
+                  className={`w-full py-2 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 ${
+                    isSelected(car.id)
+                      ? 'bg-red-600 text-white hover:bg-red-700'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <GitCompare className="w-4 h-4" />
+                  {isSelected(car.id) ? 'Selected' : 'Compare'}
+                </button>
+              )}
+              {onRemove && (
+                <button
+                  onClick={() => onRemove(car.id)}
+                  className="w-full py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  Remove this option
+                </button>
+              )}
+            </div>
           </div>
         </div>
       ))}
