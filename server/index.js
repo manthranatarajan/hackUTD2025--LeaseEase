@@ -6,8 +6,20 @@ import fetch from 'node-fetch';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// CORS configuration - allows both local development and production
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || '*',
+  methods: ['GET', 'POST'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', message: 'LeaseEase backend is running' });
+});
 
 app.post('/api/elevenlabs/text-to-speech', async (req, res) => {
   try {
