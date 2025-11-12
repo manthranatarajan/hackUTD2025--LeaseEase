@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Navigation, Phone, Clock, X } from 'lucide-react';
+import { MapPin, Navigation, Phone, X } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import { Car } from '../lib/supabase';
+import L from 'leaflet';
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
 
 interface Dealership {
   id: string;
@@ -253,17 +263,48 @@ export default function DealershipLocator({ car, onClose }: DealershipLocatorPro
 
             <div className="lg:sticky lg:top-0">
               <div className="bg-gray-100 rounded-lg overflow-hidden h-[600px]">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  frameBorder="0"
-                  style={{ border: 0 }}
-                  referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Toyota+dealerships+near+${
-                    userLocation ? `${userLocation.lat},${userLocation.lng}` : 'Los Angeles,CA'
-                  }&zoom=11`}
-                  allowFullScreen
-                />
+                <MapContainer
+                  center={userLocation ? [userLocation.lat, userLocation.lng] : [34.0522, -118.2437]}
+                  zoom={11}
+                  style={{ height: '100%', width: '100%' }}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  {userLocation && (
+                    <Marker position={[userLocation.lat, userLocation.lng]}>
+                      <Popup>Your Location</Popup>
+                    </Marker>
+                  )}
+                  {dealerships.map((dealer) => (
+                    <Marker
+                      key={dealer.id}
+                      position={[dealer.lat, dealer.lng]}
+                      eventHandlers={{
+                        click: () => setSelectedDealer(dealer),
+                      }}
+                    >
+                      <Popup>
+                        <div className="text-sm">
+                          <strong>{dealer.name}</strong>
+                          <br />
+                          {dealer.address}
+                          <br />
+                          {dealer.phone}
+                          {dealer.distance && (
+                            <>
+                              <br />
+                              <span className="text-red-600 font-semibold">
+                                {dealer.distance.toFixed(1)} mi away
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))}
+                </MapContainer>
               </div>
             </div>
           </div>
