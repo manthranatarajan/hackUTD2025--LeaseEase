@@ -1,84 +1,91 @@
-# LeaseEase — Voice-Powered Car Leasing Assistant (HackUTD 2025)
+# LeaseEase - Toyota Leasing Platform 🚗
 
-LeaseEase is a conversational web app that helps drivers explore, compare, and understand car lease options. It supports natural voice input and produces lifelike voice responses using ElevenLabs. The assistant can search inventory, estimate monthly payments, and answer follow-up questions — making leasing simpler and more accessible.
+> **Voice-enabled car shopping with intelligent recommendations**
 
-Built for HackUTD 2025 (but this is my own version). Submitted to:
-- ElevenLabs Challenge — immersive, high‑quality speech experiences
-- Toyota Challenge — mobility and automotive user experience
+An AI-powered car leasing assistant that understands your lifestyle and budget through natural conversation.
 
-## What It Does
+---
 
-- Listens to your voice (browser speech recognition) and understands requests like “Find a Toyota Camry under $350 per month.”
-- Searches available vehicles and trims, then calculates estimated lease payments based on inputs (price, term, down payment, APR/taxes assumptions).
-- Speaks back a concise summary via ElevenLabs TTS and shows details on screen.
-- Supports quick follow-ups like “Compare with Corolla,” “Extend term to 36 months,” or “Lower the down payment to $1,000.”
+## ✨ Features
 
-## Demo Walkthrough
+- 🎤 **Voice-Enabled Chat** - Speak or type your requirements naturally
+- 🧠 **AI Recommendations** - Lifestyle-based vehicle matching (family, commuter, adventurer, etc.)
+- 🔍 **Compare Vehicles** - Side-by-side comparison of 2 vehicles
+- 📍 **Dealership Locator** - Find nearby Toyota dealers
+- 💰 **Finance Calculator** - Calculate monthly payments with custom terms
+- 🚗 **3D Vehicle Viewer** - Interactive 3D models of vehicles ⚠️ **(In Progress - Models Need Improvement)**
 
-1. Open the app and press the mic button or type.
-2. Say: “Find me a Toyota Camry I can lease for under $350 per month.”
-3. The app parses your request, looks up vehicles, and computes estimates based on your constraints.
-4. You’ll hear a natural voice summary and see results with key numbers and assumptions.
-5. Try follow-ups: “Compare with Corolla,” “Make it 36 months,” or “Increase down payment to $2,000.”
+---
 
-## Tech Stack
+## 🚀 Quick Start
 
-- Frontend: React, TypeScript, Vite, Tailwind CSS
-- Backend: Node.js, Express
-- Data: Supabase (PostgreSQL) for inventory and metadata
-- Voice: Browser Speech Recognition API (STT) + ElevenLabs (TTS via backend proxy)
-- Deployment: Vercel (frontend) and Render (backend)
+### Prerequisites
+- Node.js 18+
+- Supabase account
+- ElevenLabs API key
 
-## Architecture (High Level)
+### Installation
 
-- Browser UI handles input, displays results, and triggers speech.
-- Backend `server` exposes `/api/elevenlabs/text-to-speech` to securely call ElevenLabs and stream back `audio/mpeg`.
-- Supabase provides vehicle data and supports filtering (price, model, trim). Frontend uses env-configured URL and anon key.
-
-```
-User ↔ Browser (React)
-   ├─ STT: Web Speech API
-   ├─ Data: Supabase (public API)
-   └─ TTS: POST /api/elevenlabs/text-to-speech → ElevenLabs
-```
-
-## Quick Start
-
-Prereqs: Node.js 18+, npm
-
-1) Install dependencies
-```
+```bash
+# Install dependencies
 npm install
 cd server && npm install && cd ..
-```
 
-2) Configure environment
-```
+# Configure environment variables
 cp .env.example .env
 cp server/.env.example server/.env
-```
-Fill values in both files:
-- `.env`
-  - `VITE_SUPABASE_URL`
-  - `VITE_SUPABASE_ANON_KEY`
-  - `VITE_BACKEND_URL` (default `http://localhost:3001`)
-- `server/.env`
-  - `ELEVENLABS_API_KEY` (from ElevenLabs dashboard)
-  - `PORT` (default `3001`)
-  - `FRONTEND_URL` (e.g., `http://localhost:5174` or `*` for local dev)
+# Edit .env files with your credentials
 
-3) Run locally
-```
-# Terminal 1 — Backend
+# Run the application
+# Terminal 1 - Backend
 cd server
 npm start
 
-# Terminal 2 — Frontend
+# Terminal 2 - Frontend
 npm run dev
 ```
-Open `http://localhost:5174`
 
-## License
+Visit `http://localhost:5174`
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React + TypeScript + Vite + Tailwind CSS
+- **Backend**: Express + Node.js
+- **Database**: Supabase (PostgreSQL)
+- **Voice AI**: ElevenLabs + Web Speech API
+- **3D**: Three.js (planned improvement)
+
+---
+
+## 🚧 Known Issues & Improvements Needed
+
+### ⚠️ 3D Models
+- **Status**: Fallback implementation currently in use
+- **Location**: `public/models/`
+- **Issue**: GLB files for 3D vehicle models need to be added and optimized
+- **Planned**: High-quality, interactive 3D models for all vehicle types
+---
+
+## 🌐 Deployment
+
+Quick deploy to production:
+
+1. **Backend** → [Render.com](https://render.com) (free)
+2. **Frontend** → [Vercel.com](https://vercel.com) (free)
+3. **Database** → Supabase (already configured)
+
+See `DEPLOYMENT.md` for detailed instructions.
+
+---
+
+## 📝 License
 
 MIT
 
+---
+
+**Built with for HackUTD 2025**
+
+*Challenges: ElevenLabs (Speech) + Toyota (Mobility)*

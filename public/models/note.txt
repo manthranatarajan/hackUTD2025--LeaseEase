@@ -1,0 +1,1 @@
+GLB files for 3-D models need to be added. For now a fall back is implemented.
