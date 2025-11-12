@@ -7,6 +7,7 @@ import CarsGrid from './components/CarsGrid';
 import FinanceCalculator from './components/FinanceCalculator';
 import CompareModal from './components/CompareModal';
 import DealershipLocator from './components/DealershipLocator';
+import Car3DViewer from './components/Car3DViewer';
 import { useChatbot } from './hooks/useChatbot';
 import { startListening } from './speech';
 import { MessageCircle, Calculator } from 'lucide-react';
@@ -26,6 +27,7 @@ function App() {
   const [selectedForCompare, setSelectedForCompare] = useState<string[]>([]);
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [selectedCarForDealership, setSelectedCarForDealership] = useState<Car | null>(null);
+  const [selectedCarFor3D, setSelectedCarFor3D] = useState<Car | null>(null);
 
   const suggestedQuestions = [
     "I'm looking for something under $400 per month",
@@ -145,6 +147,7 @@ function App() {
                       onCompare={handleCompareClick}
                       selectedForCompare={selectedForCompare}
                       onFindDealership={(car) => setSelectedCarForDealership(car)}
+                      onView3D={(car) => setSelectedCarFor3D(car)}
                     />
                   </div>
                 </div>
@@ -183,6 +186,13 @@ function App() {
         <DealershipLocator
           car={selectedCarForDealership}
           onClose={() => setSelectedCarForDealership(null)}
+        />
+      )}
+
+      {selectedCarFor3D && (
+        <Car3DViewer
+          car={selectedCarFor3D}
+          onClose={() => setSelectedCarFor3D(null)}
         />
       )}
     </div>

@@ -1,5 +1,5 @@
 import { Car } from '../lib/supabase';
-import { DollarSign, Fuel, Gauge, Settings, GitCompare, MapPin } from 'lucide-react';
+import { DollarSign, Fuel, Gauge, Settings, GitCompare, MapPin, Box } from 'lucide-react';
 
 interface CarsGridProps {
   cars: Car[];
@@ -7,9 +7,10 @@ interface CarsGridProps {
   onCompare?: (carId: string) => void;
   selectedForCompare?: string[];
   onFindDealership?: (car: Car) => void;
+  onView3D?: (car: Car) => void;
 }
 
-export default function CarsGrid({ cars, onRemove, onCompare, selectedForCompare = [], onFindDealership }: CarsGridProps) {
+export default function CarsGrid({ cars, onRemove, onCompare, selectedForCompare = [], onFindDealership, onView3D }: CarsGridProps) {
   if (cars.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
@@ -38,6 +39,15 @@ export default function CarsGrid({ cars, onRemove, onCompare, selectedForCompare
             <div className="absolute top-3 right-3 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
               ${car.monthly_payment}/mo
             </div>
+            {onView3D && (
+              <button
+                onClick={() => onView3D(car)}
+                className="absolute top-3 left-3 bg-black bg-opacity-60 hover:bg-opacity-80 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2"
+              >
+                <Box className="w-4 h-4" />
+                3D View
+              </button>
+            )}
           </div>
 
           <div className="p-5">
